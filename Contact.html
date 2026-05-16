@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Book & Contact — Blade & Crown Barbershop</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:ital,wght@0,300;0,400;0,600;1,300;1,600&family=Barlow:wght@300;400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --black: #0d0d0d;
+    --white: #f0ede8;
+    --yellow: #e8c832;
+    --gray: #1a1a1a;
+    --mid: #2e2e2e;
+    --text-muted: #6b6b6b;
+  }
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { background: var(--black); color: var(--white); font-family: 'Barlow', sans-serif; font-weight: 300; overflow-x: hidden; }
+
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 48px; height: 72px;
+    background: var(--black); border-bottom: 1px solid #1f1f1f;
+  }
+  .nav-logo { font-family: 'Bebas Neue', sans-serif; font-size: 1.6rem; letter-spacing: 0.1em; color: var(--white); }
+  .nav-logo span { color: var(--yellow); }
+  .nav-links { display: flex; list-style: none; }
+  .nav-links a {
+    font-family: 'Barlow Condensed', sans-serif; font-size: 0.75rem; font-weight: 600;
+    letter-spacing: 0.2em; text-transform: uppercase; color: var(--text-muted); text-decoration: none;
+    padding: 0 24px; height: 72px; display: flex; align-items: center;
+    border-right: 1px solid #1f1f1f; transition: color 0.2s, background 0.2s;
+  }
+  .nav-links a:first-child { border-left: 1px solid #1f1f1f; }
+  .nav-links a:hover, .nav-links a.active { color: var(--yellow); background: #141414; }
+  .nav-book { font-family: 'Barlow Condensed', sans-serif; font-size: 0.75rem; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; background: var(--yellow); color: var(--black); text-decoration: none; padding: 12px 28px; transition: background 0.2s; }
+  .nav-book:hover { background: #fff; }
+
+  /* PAGE HEADER */
+  .page-header {
+    padding: 160px 48px 80px;
+    border-bottom: 1px solid #1f1f1f;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 48px;
+    align-items: end;
+    background: linear-gradient(135deg, var(--gray) 0%, var(--black) 60%);
+  }
+
+  .section-tag {
+    font-family: 'Barlow Condensed', sans-serif; font-size: 0.7rem; font-weight: 600;
+    letter-spacing: 0.4em; text-transform: uppercase; color: var(--yellow);
+    margin-bottom: 16px; display: flex; align-items: center; gap: 12px;
+  }
+  .section-tag::before { content: ''; display: block; width: 30px; height: 2px; background: var(--yellow); }
+
+  .page-title { font-family: 'Bebas Neue', sans-serif; font-size: clamp(3.5rem, 7vw, 7rem); line-height: 0.92; letter-spacing: 0.02em; }
+  .page-title .accent { color: var(--yellow); }
+  .page-desc { font-size: 0.95rem; line-height: 1.8; color: var(--text-muted); max-width: 420px; align-self: end; }
+
+  /* MAIN CONTENT */
+  .main-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    min-height: 80vh;
+  }
+
+  /* BOOKING FORM */
+  .booking-side {
+    padding: 80px 60px 80px 48px;
+    border-right: 1px solid #1f1f1f;
+  }
+
+  .side-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2.2rem;
+    letter-spacing: 0.05em;
+    color: var(--white);
+    margin-bottom: 8px;
+  }
+
+  .side-sub {
+    font-size: 0.82rem;
+    color: var(--text-muted);
+    margin-bottom: 48px;
+    line-height: 1.6;
+  }
+
+  .form-group {
+    margin-bottom: 28px;
+  }
+
+  .form-label {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.65rem;
+    font-weight: 600;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    display: block;
+    margin-bottom: 10px;
+  }
+
+  .form-input {
+    width: 100%;
+    background: var(--gray);
+    border: 1px solid #2a2a2a;
+    color: var(--white);
+    font-family: 'Barlow', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 300;
+    padding: 14px 18px;
+    outline: none;
+    transition: border-color 0.2s, background 0.2s;
+  }
+  .form-input:focus { border-color: var(--yellow); background: #1f1f1f; }
+  .form-input::placeholder { color: #3a3a3a; }
+  .form-input option { background: var(--gray); }
+
+  .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+
+  /* Barber selector */
+  .barber-select {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    margin-bottom: 28px;
+  }
+
+  .barber-option {
+    border: 1px solid #2a2a2a;
+    padding: 16px 12px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    background: var(--gray);
+  }
+  .barber-option:hover { border-color: #444; }
+  .barber-option.selected { border-color: var(--yellow); background: rgba(232,200,50,0.08); }
+
+  .barber-option-name {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--white);
+    margin-bottom: 4px;
+  }
+  .barber-option.selected .barber-option-name { color: var(--yellow); }
+
+  .barber-option-role {
+    font-size: 0.65rem;
+    color: var(--text-muted);
+  }
+
+  /* Service pills */
+  .service-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 28px;
+  }
+
+  .service-pill {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    border: 1px solid #2a2a2a;
+    color: var(--text-muted);
+    padding: 8px 18px;
+    cursor: pointer;
+    transition: all 0.2s;
+    background: var(--gray);
+  }
+  .service-pill:hover { border-color: #444; color: var(--white); }
+  .service-pill.selected { background: var(--yellow); color: var(--black); border-color: var(--yellow); }
+
+  .btn-submit {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    background: var(--yellow);
+    color: var(--black);
+    border: none;
+    padding: 18px 48px;
+    width: 100%;
+    cursor: pointer;
+    margin-top: 12px;
+    transition: background 0.2s, transform 0.2s;
+    font-family: 'Barlow Condensed', sans-serif;
+  }
+  .btn-submit:hover { background: var(--white); transform: translateY(-1px); }
+
+  .form-note {
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    margin-top: 12px;
+    text-align: center;
+  }
+
+  /* INFO SIDE */
+  .info-side {
+    padding: 80px 48px 80px 60px;
+  }
+
+  .info-block {
+    margin-bottom: 56px;
+  }
+
+  .info-block-title {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.65rem;
+    font-weight: 600;
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    color: var(--yellow);
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .info-block-title::before { content: ''; display: block; width: 20px; height: 2px; background: var(--yellow); }
+
+  .hours-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+  }
+
+  .hours-row {
+    display: contents;
+  }
+
+  .hours-day {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--white);
+    padding: 12px 0;
+    border-bottom: 1px solid #1f1f1f;
+  }
+
+  .hours-time {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    padding: 12px 0;
+    border-bottom: 1px solid #1f1f1f;
+    text-align: right;
+  }
+
+  .hours-time.closed { color: var(--yellow); }
+
+  .contact-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 20px;
+    margin-bottom: 24px;
+  }
+
+  .contact-icon {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 0.8rem;
+    letter-spacing: 0.1em;
+    color: var(--yellow);
+    background: rgba(232,200,50,0.1);
+    padding: 8px 12px;
+    min-width: 52px;
+    text-align: center;
+  }
+
+  .contact-text {
+    font-size: 0.85rem;
+    line-height: 1.7;
+    color: var(--white);
+  }
+  .contact-text small { display: block; font-size: 0.7rem; color: var(--text-muted); margin-bottom: 2px; letter-spacing: 0.1em; text-transform: uppercase; font-family: 'Barlow Condensed', sans-serif; font-weight: 600; }
+
+  /* MAP PLACEHOLDER */
+  .map-placeholder {
+    background: var(--gray);
+    border: 1px solid #2a2a2a;
+    height: 180px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+    margin-top: 8px;
+  }
+
+  .map-placeholder::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: 
+      repeating-linear-gradient(0deg, transparent, transparent 30px, #222 30px, #222 31px),
+      repeating-linear-gradient(90deg, transparent, transparent 30px, #222 30px, #222 31px);
+  }
+
+  .map-pin {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+  }
+
+  .map-pin-dot {
+    width: 16px; height: 16px;
+    background: var(--yellow);
+    border-radius: 50%;
+    margin: 0 auto 8px;
+    box-shadow: 0 0 0 4px rgba(232,200,50,0.2);
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { box-shadow: 0 0 0 4px rgba(232,200,50,0.2); }
+    50% { box-shadow: 0 0 0 10px rgba(232,200,50,0.05); }
+  }
+
+  .map-pin-label {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.65rem;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--yellow);
+    background: var(--black);
+    padding: 4px 12px;
+  }
+
+  /* Success state */
+  .success-msg {
+    display: none;
+    background: rgba(232,200,50,0.1);
+    border: 1px solid var(--yellow);
+    padding: 24px;
+    text-align: center;
+    margin-top: 16px;
+  }
+  .success-msg h3 { font-family: 'Bebas Neue', sans-serif; font-size: 1.8rem; color: var(--yellow); margin-bottom: 8px; }
+  .success-msg p { font-size: 0.82rem; color: var(--text-muted); }
+
+  footer {
+    padding: 60px 48px 32px; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 60px;
+    border-top: 1px solid #1f1f1f;
+  }
+  .footer-logo { font-family: 'Bebas Neue', sans-serif; font-size: 2rem; letter-spacing: 0.1em; color: var(--white); display: block; margin-bottom: 12px; }
+  .footer-logo span { color: var(--yellow); }
+  .footer-desc { font-size: 0.82rem; line-height: 1.8; color: var(--text-muted); max-width: 260px; }
+  .footer-col h4 { font-family: 'Barlow Condensed', sans-serif; font-size: 0.65rem; font-weight: 600; letter-spacing: 0.35em; text-transform: uppercase; color: var(--yellow); margin-bottom: 20px; }
+  .footer-col ul { list-style: none; }
+  .footer-col ul li { font-size: 0.82rem; color: var(--text-muted); margin-bottom: 10px; line-height: 1.5; }
+  .footer-col ul li a { color: var(--text-muted); text-decoration: none; transition: color 0.2s; }
+  .footer-col ul li a:hover { color: var(--white); }
+  .footer-bottom { padding: 20px 48px; border-top: 1px solid #1f1f1f; display: flex; justify-content: space-between; }
+  .footer-bottom p { font-size: 0.68rem; color: #3a3a3a; }
+
+  @media (max-width: 768px) {
+    nav { padding: 0 20px; }
+    .nav-links { display: none; }
+    .page-header { grid-template-columns: 1fr; padding: 120px 20px 60px; }
+    .main-content { grid-template-columns: 1fr; }
+    .booking-side { padding: 60px 20px; border-right: none; border-bottom: 1px solid #1f1f1f; }
+    .info-side { padding: 60px 20px; }
+    .form-row { grid-template-columns: 1fr; }
+    .barber-select { grid-template-columns: 1fr 1fr; }
+    footer { grid-template-columns: 1fr 1fr; padding: 40px 20px; }
+    .footer-bottom { padding: 16px 20px; flex-direction: column; gap: 6px; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <span class="nav-logo">Blade<span>&</span>Crown</span>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="gallery.html">Gallery</a></li>
+    <li><a href="contact.html" class="active">Contact</a></li>
+  </ul>
+  <a href="contact.html" class="nav-book">Book Now</a>
+</nav>
+
+<div class="page-header">
+  <div>
+    <div class="section-tag">Get In The Chair</div>
+    <h1 class="page-title">Book Your <span class="accent">Appointment</span></h1>
+  </div>
+  <p class="page-desc">Ready for a fresh cut? Fill out the form and we'll confirm your booking within the hour. Walk-ins welcome based on availability.</p>
+</div>
+
+<div class="main-content">
+
+  <!-- BOOKING FORM -->
+  <div class="booking-side">
+    <h2 class="side-title">Reserve Your Spot</h2>
+    <p class="side-sub">Choose your barber, service, and preferred time below.</p>
+
+    <form onsubmit="handleSubmit(event)">
+
+      <!-- Barber select -->
+      <div class="form-group">
+        <label class="form-label">Choose Your Barber</label>
+        <div class="barber-select">
+          <div class="barber-option" onclick="selectBarber(this)">
+            <div class="barber-option-name">Marcus</div>
+            <div class="barber-option-role">Master Barber</div>
+          </div>
+          <div class="barber-option" onclick="selectBarber(this)">
+            <div class="barber-option-name">Diego</div>
+            <div class="barber-option-role">Senior Barber</div>
+          </div>
+          <div class="barber-option" onclick="selectBarber(this)">
+            <div class="barber-option-name">Jordan</div>
+            <div class="barber-option-role">Style Specialist</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Service -->
+      <div class="form-group">
+        <label class="form-label">Select Service</label>
+        <div class="service-pills">
+          <div class="service-pill" onclick="selectService(this)">Classic Cut — $35</div>
+          <div class="service-pill" onclick="selectService(this)">Fade & Taper — $45</div>
+          <div class="service-pill" onclick="selectService(this)">Hot Towel Shave — $55</div>
+          <div class="service-pill" onclick="selectService(this)">Beard Sculpt — $30</div>
+          <div class="service-pill" onclick="selectService(this)">Cut + Beard — $65</div>
+          <div class="service-pill" onclick="selectService(this)">VIP Package — $110</div>
+        </div>
+      </div>
+
+      <!-- Name -->
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">First Name</label>
+          <input type="text" class="form-input" placeholder="John" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Last Name</label>
+          <input type="text" class="form-input" placeholder="Smith" required>
+        </div>
+      </div>
+
+      <!-- Date & Time -->
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Preferred Date</label>
+          <input type="date" class="form-input" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Preferred Time</label>
+          <select class="form-input" required>
+            <option value="">Select time</option>
+            <option>9:00 AM</option>
+            <option>9:30 AM</option>
+            <option>10:00 AM</option>
+            <option>10:30 AM</option>
+            <option>11:00 AM</option>
+            <option>11:30 AM</option>
+            <option>12:00 PM</option>
+            <option>1:00 PM</option>
+            <option>2:00 PM</option>
+            <option>3:00 PM</option>
+            <option>4:00 PM</option>
+            <option>5:00 PM</option>
+            <option>6:00 PM</option>
+            <option>7:00 PM</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Phone & Email -->
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Phone Number</label>
+          <input type="tel" class="form-input" placeholder="(312) 000-0000" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Email Address</label>
+          <input type="email" class="form-input" placeholder="john@email.com" required>
+        </div>
+      </div>
+
+      <!-- Notes -->
+      <div class="form-group">
+        <label class="form-label">Special Requests (Optional)</label>
+        <input type="text" class="form-input" placeholder="Any notes for your barber...">
+      </div>
+
+      <button type="submit" class="btn-submit">Confirm Booking</button>
+      <p class="form-note">We'll confirm your appointment via email within 1 hour.</p>
+    </form>
+
+    <div class="success-msg" id="success">
+      <h3>You're Booked! ✓</h3>
+      <p>We'll send a confirmation to your email shortly. See you in the chair.</p>
+    </div>
+  </div>
+
+  <!-- INFO SIDE -->
+  <div class="info-side">
+
+    <div class="info-block">
+      <div class="info-block-title">Hours</div>
+      <div class="hours-grid">
+        <div class="hours-day">Monday – Friday</div><div class="hours-time">9:00 AM – 8:00 PM</div>
+        <div class="hours-day">Saturday</div><div class="hours-time">8:00 AM – 7:00 PM</div>
+        <div class="hours-day">Sunday</div><div class="hours-time">10:00 AM – 5:00 PM</div>
+      </div>
+    </div>
+
+    <div class="info-block">
+      <div class="info-block-title">Find Us</div>
+      <div class="contact-item">
+        <div class="contact-icon">ADDR</div>
+        <div class="contact-text"><small>Location</small>847 W Madison Street<br>Chicago, IL 60607</div>
+      </div>
+      <div class="contact-item">
+        <div class="contact-icon">TEL</div>
+        <div class="contact-text"><small>Phone</small>(312) 555-0184</div>
+      </div>
+      <div class="contact-item">
+        <div class="contact-icon">MAIL</div>
+        <div class="contact-text"><small>Email</small>hello@bladeandcrown.com</div>
+      </div>
+      <div class="map-placeholder">
+        <div class="map-pin">
+          <div class="map-pin-dot"></div>
+          <div class="map-pin-label">Blade & Crown — Chicago</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="info-block">
+      <div class="info-block-title">Walk-Ins</div>
+      <p style="font-size:0.85rem; line-height:1.8; color:var(--text-muted)">
+        Walk-ins are always welcome based on chair availability. For guaranteed service, we strongly recommend booking in advance — especially on weekends.
+      </p>
+    </div>
+
+    <div class="info-block">
+      <div class="info-block-title">Follow Us</div>
+      <div style="display:flex; gap:8px; flex-wrap:wrap;">
+        <a href="#" style="font-family:'Barlow Condensed',sans-serif; font-size:0.7rem; font-weight:600; letter-spacing:0.2em; text-transform:uppercase; background:var(--yellow); color:var(--black); text-decoration:none; padding:10px 20px; transition:background 0.2s;">INSTAGRAM</a>
+        <a href="#" style="font-family:'Barlow Condensed',sans-serif; font-size:0.7rem; font-weight:600; letter-spacing:0.2em; text-transform:uppercase; background:var(--gray); color:var(--white); text-decoration:none; padding:10px 20px; border:1px solid #333; transition:background 0.2s;">FACEBOOK</a>
+        <a href="#" style="font-family:'Barlow Condensed',sans-serif; font-size:0.7rem; font-weight:600; letter-spacing:0.2em; text-transform:uppercase; background:var(--gray); color:var(--white); text-decoration:none; padding:10px 20px; border:1px solid #333; transition:background 0.2s;">TIKTOK</a>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<footer>
+  <div>
+    <span class="footer-logo">Blade<span>&</span>Crown</span>
+    <p class="footer-desc">Premium barbershop in the heart of Chicago. Serving the community since 2015.</p>
+  </div>
+  <div class="footer-col">
+    <h4>Navigate</h4>
+    <ul>
+      <li><a href="index.html">Home</a></li>
+      <li><a href="gallery.html">Gallery</a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul>
+  </div>
+  <div class="footer-col">
+    <h4>Hours</h4>
+    <ul>
+      <li>Mon–Fri: 9am–8pm</li>
+      <li>Saturday: 8am–7pm</li>
+      <li>Sunday: 10am–5pm</li>
+    </ul>
+  </div>
+  <div class="footer-col">
+    <h4>Contact</h4>
+    <ul>
+      <li>847 W Madison St<br>Chicago, IL</li>
+      <li>(312) 555-0184</li>
+    </ul>
+  </div>
+</footer>
+<div class="footer-bottom">
+  <p>© 2025 Blade & Crown Barbershop</p>
+  <p>Chicago's Premier Barbershop</p>
+</div>
+
+<script>
+  function selectBarber(el) {
+    document.querySelectorAll('.barber-option').forEach(b => b.classList.remove('selected'));
+    el.classList.add('selected');
+  }
+  function selectService(el) {
+    document.querySelectorAll('.service-pill').forEach(p => p.classList.remove('selected'));
+    el.classList.add('selected');
+  }
+  function handleSubmit(e) {
+    e.preventDefault();
+    const btn = e.target.querySelector('.btn-submit');
+    btn.textContent = 'Booking Confirmed ✓';
+    btn.style.background = '#2a7a2a';
+    btn.style.color = '#fff';
+    document.getElementById('success').style.display = 'block';
+    setTimeout(() => {
+      btn.textContent = 'Confirm Booking';
+      btn.style.background = '';
+      btn.style.color = '';
+    }, 4000);
+  }
+</script>
+</body>
+</html>
